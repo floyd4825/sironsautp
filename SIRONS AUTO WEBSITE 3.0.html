@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SIRONS AUTO — Auto Spares</title>
+  <style>
+    /* ===== Reset & base ===== */
+    :root{
+      --accent1:#1e90ff;
+      --accent2:#ff8a00;
+      --glass:rgba(255,255,255,0.06);
+      --card-shadow:0 8px 30px rgba(0,0,0,0.25);
+      --whatsapp:#25D366;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:#0b0b0b;-webkit-font-smoothing:antialiased}
+    body{
+      /* slightly stronger, more vivid gradient */
+      min-height:100%;
+      background: linear-gradient(120deg, rgba(30,144,255,0.26), rgba(255,138,0,0.22) 40%, rgba(255,255,255,0.95) 70%);
+      background-size:400% 400%;
+      animation:bgShift 14s ease-in-out infinite;
+    }
+    @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+    .container{max-width:1100px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:14px}
+    /* larger, prettier profile frame (keeps original image but nicer) */
+    .logo-wrap{width:120px;height:120px;border-radius:14px;overflow:hidden;box-shadow:var(--card-shadow);flex:0 0 120px;background:#fff;padding:8px;display:flex;align-items:center;justify-content:center}
+    .logo-wrap img{width:100%;height:100%;object-fit:contain;object-position:center;border-radius:8px}
+    nav{display:flex;gap:12px}
+    nav a{color:#111;text-decoration:none;font-weight:600;padding:8px 10px;border-radius:8px}
+    nav a.active{color:var(--accent1);background:rgba(255,255,255,0.9)}
+    main{margin-top:18px}
+
+    /* hero / home */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:22px;align-items:center}
+    .hero-card{background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.85));padding:22px;border-radius:16px;box-shadow:var(--card-shadow)}
+    .hero h1{margin:0 0 8px;font-size:26px;text-align:center;letter-spacing:0.6px}
+    .hero p{margin:0 0 10px;color:#333;line-height:1.45;text-align:center}
+
+    /* profile background card (uses sirons auto profile.jpeg but contained so full details visible) */
+    .profile-bg{border-radius:16px;overflow:hidden;position:relative;height:480px;background:#fff;display:flex;align-items:center;justify-content:center}
+    .profile-bg img{width:98%;height:98%;object-fit:contain;object-position:center top;filter:contrast(0.96)}
+    .profile-overlay{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);padding:10px 14px;background:rgba(0,0,0,0.36);color:white;border-radius:10px;font-weight:700;text-align:center}
+
+    /* grid cards (restore original first-template layout) */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    .card{background:var(--glass);padding:14px;border-radius:12px;backdrop-filter:blur(6px);box-shadow:0 6px 20px rgba(0,0,0,0.12)}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:10px;display:block}
+    .card h3{margin:10px 0 6px}
+    .card p{margin:0;color:#222;line-height:1.35}
+    .round{border-radius:16px;transition:transform .35s cubic-bezier(.2,.9,.3,1)}
+    .round:hover{transform:translateY(-8px) rotate(-1deg) scale(1.02)}
+
+    /* small shape variant used previously */
+    .hex{clip-path:polygon(25% 6%,75% 6%,100% 50%,75% 94%,25% 94%,0% 50%)}
+
+    /* pages */
+    section.page{display:none;padding:20px 0}
+    section.page.active{display:block}
+    .hero-card .flop{opacity:0;transform:translateY(18px);transition:all .8s ease}
+    .flop.in-view{opacity:1;transform:none}
+
+    /* colorful page backgrounds — subtle but present */
+    #about, #services, #feedback, #contact {background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(30,144,255,0.03));border-radius:14px;padding:18px;box-shadow:var(--card-shadow)}
+    #services .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,138,0,0.03))}
+    #feedback .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(230,255,230,0.04))}
+
+    /* mission / vision / core value boxes */
+    .mv-box{margin-top:18px;background:white;border-radius:12px;padding:14px;box-shadow:0 8px 20px rgba(0,0,0,0.06);font-weight:700;text-align:center}
+
+    /* counter restored */
+    .counter{font-size:36px;font-weight:800;color:var(--accent1);display:inline-block}
+
+    /* reviews (restored sample list) */
+    .reviews{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .review{background:white;padding:12px;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.06)}
+    .review .meta{font-weight:700;margin-bottom:8px}
+    .review .likes{float:right;color:var(--accent2);font-weight:800}
+
+    /* feedback form (visual send) */
+    .feedback-form{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .feedback-form input,.feedback-form textarea{padding:10px;border-radius:8px;border:1px solid #ddd;width:100%;font-size:15px}
+    .feedback-form button{padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;font-weight:800;cursor:pointer}
+
+    /* contact actions */
+    .contact-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{padding:10px 12px;border-radius:8px;background:white;text-decoration:none;color:#111;box-shadow:var(--card-shadow);font-weight:700}
+    .whatsapp{background:linear-gradient(90deg,var(--whatsapp),#128C7E);color:white}
+
+    /* map page container centered */
+    #mapPage{display:flex;align-items:center;justify-content:center;min-height:60vh}
+    #mapFrame{width:80%;max-width:1000px;height:480px;border-radius:12px;border:0;box-shadow:var(--card-shadow);display:block}
+
+    /* footer watermark bold */
+    footer{margin-top:28px;padding:14px;text-align:center;color:#222;font-size:14px;font-weight:bold}
+    .watermark{font-weight:bold;opacity:0.95}
+
+    /* rotating spanner loader */
+    #loader{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;background:rgba(255,255,255,0.92);z-index:9999}
+    #loader svg{width:80px;height:80px;animation:spin 1s linear infinite;stroke:var(--accent1);fill:none;stroke-width:2}
+    @keyframes spin{100%{transform:rotate(360deg)}}
+
+    /* responsive */
+    @media(max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .logo-wrap{width:96px;height:96px}
+      .profile-bg{height:360px}
+      .reviews{grid-template-columns:1fr}
+    }
+    @media(max-width:640px){
+      nav{display:none}
+      .logo-wrap{width:72px;height:72px}
+      .profile-bg{height:300px}
+    }
+  </style>
+</head>
+<body>
+  <!-- loader: rotating spanner shown when navigating pages -->
+  <div id="loader" aria-hidden="true">
+    <!-- spanner icon (SVG) rotates via CSS -->
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21.6 13.5l-2.1-1.2a8 8 0 10-1.8 4.9l1.1 2.1-2.3 2.3-2.1-1.1a8 8 0 101.7-5l2.1 1.2 2.3-2.3z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="brand" role="banner">
+        <div class="logo-wrap">
+          <!-- keep original profile image but in nicer frame -->
+          <img src="sirons auto profile.jpeg" alt="Sirons Auto profile">
+        </div>
+        <div>
+          <div style="font-weight:800;font-size:20px">SIRONS AUTO</div>
+          <div style="font-size:13px;color:#333">Auto Spares • PO BOX 15504-00503</div>
+        </div>
+      </div>
+
+      <nav aria-label="Main navigation">
+        <a href="#" data-target="home" class="active">Home</a>
+        <a href="#" data-target="about">About</a>
+        <a href="#" data-target="services">Services</a>
+        <a href="#" data-target="feedback">Feedback</a>
+        <a href="#" data-target="contact">Contact</a>
+      
+      </nav>
+    </header>
+
+    <main>
+      <!-- HOME (restored images & layout from first template) -->
+      <section id="home" class="page active">
+        <div class="hero">
+          <div class="hero-card flop">
+            <h1>SIRONS AUTO SPARES AND ACCESSORIES</h1>
+            <p>Sirons Auto Spares is a trusted supplier of genuine vehicle spare parts sourced from global markets. We offer quality engines, gearboxes, suspension systems, body parts, and accessories for all vehicle models. With a commitment to reliability, affordability, and excellent customer service, Sirons Auto Spares keeps your car running smoothly and efficiently.</p>
+            <p style="text-align:center"><strong>Contact:</strong>📞 +254 723 682 208 • +254 737 482 614</p>
+            <p style="text-align:center"><strong>Email:</strong> ✉️ sironsauto@gmail.com</p>
+
+            <div style="display:flex;gap:10px;align-items:center;justify-content:center;margin-top:12px">
+              <div style="background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:10px;border-radius:10px;color:white;font-weight:700">Delivery • Advice • Referrals</div>
+              <div style="background:white;padding:10px;border-radius:10px;font-weight:700">PO BOX 15504-00503</div>
+            </div>
+          </div>
+
+          <aside class="profile-bg round pill">
+            <!-- use same profile image but nicely contained so details visible -->
+            <img src="sirons auto profile.jpeg" alt="Sirons Auto profile background">
+            <div class="profile-overlay">SIRONS AUTO — Auto Spares & Accessories</div>
+          </aside>
+        </div>
+
+        <!-- restored grid from first template -->
+        <div class="grid">
+          <div class="card flop">
+            <img class="round hex" src="sirons spare tools.jpeg" alt="Spare tools">
+            <h3>Tools & Repair Parts</h3>
+            <p>We stock hand tools, repair kits, and specialty items used daily by professional mechanics. Everything from wrenches to resealing kits — ready for dispatch.</p>
+          </div>
+
+          <div class="card flop">
+            <img class="round" src="sirons spares.jpeg" alt="Spare parts">
+            <h3>Spare Parts</h3>
+            <p>Genuine and aftermarket parts for many makes and models. If we don’t have it, we can source it and deliver with trusted partners.</p>
+          </div>
+
+          <div class="card flop">
+            <img class="round" src="sirons store.jpeg" alt="Store rack">
+            <h3>Storefront</h3>
+            <p>Our physical store showcases a well-organised rack system so clients quickly find what they need. Visit the showroom for hands-on assistance.</p>
+          </div>
+
+          <div class="card flop">
+            <img class="round" src="sirons tools.jpeg" alt="Tools fancy">
+            <h3>Showcase Tools</h3>
+            <p>Flagship tools and highlighted items for professionals and enthusiasts — stylishly displayed to help you choose.</p>
+          </div>
+
+          <div class="card flop">
+            <img class="round" src="sirons tyre remes.jpeg" alt="Tyre remes">
+            <h3>Rims</h3>
+            <p>Sirons Auto Spares specializes in quality car rims for all vehicle models. We supply durable, stylish, and performance-tested rims sourced from trusted global markets to enhance your vehicle’s look and stability on the road.</p>
+          </div>
+
+          <div class="card flop">
+            <img class="round" src="sirons tyre.jpeg" alt="Tyres">
+            <h3>Engine</h3>
+            <p>At Sirons Auto Spares, we provide top-grade vehicle engines built for power and longevity. Each engine is carefully inspected and sourced from trusted suppliers to ensure optimal performance and dependability for every drive.</p>
+          </div>
+        </div>
+
+        <!-- warehouse + workspace images (restored) -->
+        <div class="hero" style="margin-top:20px">
+          <div class="hero-card flop">
+            <h2>Our Warehouse &amp; Workspace</h2>
+            <p>Our warehouse stores bulk inventory — racks, pallets, and specialised storage to keep parts safe and accessible. The workspace and reception area ensure smooth client service and inspection of parts before sale.</p>
+            <p>We test items, re-condition where necessary and package carefully for delivery across Nairobi and nationwide.</p>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow)"><img src="sirons warehouse.jpeg" alt="Warehouse" style="width:100%;height:220px;object-fit:cover"></div>
+            <div style="border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow)"><img src="sirons workspace.jpeg" alt="Workspace" style="width:100%;height:140px;object-fit:cover"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about" class="page">
+        <div class="hero-card flop">
+          <h2>About SIRONS AUTO</h2>
+          <p>Founded to serve motorists, mechanics and transport businesses, SIRONS AUTO has established a reputation for honest pricing and dependable parts. Our staff have decades of combined experience in parts identification and fitment.</p>
+          <p>We provide professional advice, part sourcing and trusted referrals to garages and installers to ensure correct fitment and long life.</p>
+        </div>
+
+        <!-- separated bold boxes for Mission/Vision/Core values -->
+        <div class="mv-box">🚗 <strong>Our Mission:</strong> To supply durable, affordable auto spares and deliver expert advice that keeps vehicles moving.</div>
+        <div class="mv-box">🌍 <strong>Our Vision:</strong> To be the most trusted auto-spares partner across East Africa.</div>
+        <div class="mv-box">💪 <strong>Core Values:</strong> Integrity • Quality • Customer-first service • Reliability.</div>
+      </section>
+
+      <!-- SERVICES -->
+      <section id="services" class="page">
+        <div class="hero-card flop">
+          <h2>Services</h2>
+          <ul>
+            <h3>1. Ex Vehicle Spare Parts</h3>
+<p>Supply of genuine ex-UK ex-Japan ex-German ex-China used and new parts for all major vehicle brands — Toyota, Nissan, BMW, Mercedes, VW, Ford, Land Rover, and more. All parts are tested and verified from the country of origin.</p>
+
+<h3>2. Vehicle Sourcing & Import Assistance</h3>
+<p>We help customers source and import cars directly from the UK to Kenya, including vehicle inspection, shipping coordination, and clearing services.</p>
+
+<h3>3. Engine & Gearbox Replacement  </h3>
+<p>Sale and installation of engines, gearboxes, and transmissions in excellent condition. All components are professionally fitted and performance-tested.</p>
+
+<h3>4. Mechanical & Electrical Repairs</h3>
+<p>We handle general repairs, diagnostics, ECU, wiring, and sensor replacements for both petrol and diesel models.</p>
+
+<h3>5. Vehicle Diagnostics & Scanning</h3>
+<p>Advanced computerized diagnostics to detect faults quickly and accurately, ensuring precise repair solutions.</p>
+
+<h3>6. Suspension & Steering Systems</h3>
+<p>Replacement and alignment for shocks, arms, ball joints, and power steering systems using genuine ex-UK components.</p>
+
+<h3>7. Brake & Clutch Systems</h3>
+<p>Brake pad replacement, disc skimming, clutch kit installations, and hydraulic adjustments for smooth, safe performance.</p>
+
+<h3>8. Body Parts & Panels (Ex)</h3>
+<p>Ex-UK, Ex-Japan and Ex-German bumpers, mirrors, bonnets, doors, grilles, lights, and more — perfect fit and finish to restore your car’s original look.</p>
+
+<h3>9. Tyres, Rims & Accessories</h3>
+<p>High-quality ex-Japan and brand-new tyres and rims. Includes professional wheel balancing, alignment, and fitting services.</p>
+
+<h3>10. Car Batteries & Lighting</h3>
+<p>Long-lasting car batteries, LED and HID lighting solutions — with expert testing and installation on-site.</p>
+
+<h3>11. Vehicle Servicing & Oil Change</h3>
+<p>Routine maintenance including oil, filters, and coolant change to keep your vehicle in top running condition.</p>
+
+<h3>12. Fleet Maintenance Packages</h3>
+<p>Tailored service packages for companies and institutions — offering affordable parts, regular checks, and preventive maintenance.</p>
+          </ul>
+          <p>Each order is inspected and packaged for safe transport. We aim for fast turnaround and reliable delivery.</p>
+        </div>
+      </section>
+
+      <!-- FEEDBACK (restored sample reviews + visual form) -->
+      <section id="feedback" class="page">
+        <div class="hero-card flop">
+          <h2>Client Feedback</h2>
+
+          <!-- client counter -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+            <div style="font-size:14px">Clients served</div>
+            <div class="counter" id="clientCounter">0</div>
+            <div style="font-size:12px;color:#666">+ satisfied clients</div>
+          </div>
+
+          <div class="reviews" id="reviews">
+            <!-- Reviews populated by JS -->
+          </div>
+
+          <!-- Visual (demo) feedback form (Name, Email, Message) -->
+          <form id="feedbackForm" class="feedback-form" aria-label="Send feedback">
+            <input id="fbName" type="text" placeholder="Your name" required />
+            <input id="fbEmail" type="email" placeholder="Your email" required />
+            <textarea id="fbMessage" rows="5" placeholder="Your feedback / message" required></textarea>
+            <button type="submit">Send Feedback</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="page">
+        <div class="hero-card flop">
+          <h2>Contact Us</h2>
+          <p><strong>Phone:</strong> +254723682208, +254737482614</p>
+          <p><strong>Email:</strong> sironsauto@gmail.com</p>
+          <p><strong>Address:</strong> PO BOX 15504-00503</p>
+
+          <div class="contact-actions">
+            <a class="btn" href="tel:+254723682208">📞 Call Us</a>
+            <a class="btn" href="mailto:sironsauto@gmail.com">✉️ Email Us</a>
+            <a class="btn whatsapp" href="https://wa.me/254723682208?text=Hello%20Sirons%20Auto!" target="_blank" rel="noopener">💬 Chat us on WhatsApp</a>
+          </div>
+
+          <!-- message us block (Name, Email, Message) - visual send -->
+          <div style="margin-top:18px">
+            <h3>Message Us</h3>
+            <form id="contactForm" class="feedback-form" aria-label="Message us">
+              <input id="msgName" type="text" placeholder="Your name" required />
+              <input id="msgEmail" type="email" placeholder="Your email" required />
+              <textarea id="msgBody" rows="5" placeholder="Your message" required></textarea>
+              <button type="submit">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="watermark">ALL RIGHTS RESERVED — 
+        PROUDLY BUILT AND DESIGNED BY TAPEL AGENCY</div>
+    </footer>
+  </div>
+
+  <script>
+    // ---- Navigation + loader (rotating spanner) ----
+    const navLinks = document.querySelectorAll('nav a');
+    const pages = document.querySelectorAll('.page');
+    const loader = document.getElementById('loader');
+
+    function showLoader() {
+      loader.style.display = 'flex';
+    }
+    function hideLoader() {
+      loader.style.display = 'none';
+    }
+
+    navLinks.forEach(link=>{
+      link.addEventListener('click', e=>{
+        e.preventDefault();
+        const target = link.dataset.target;
+        // show loader
+        showLoader();
+        // set active link styling immediately
+        navLinks.forEach(n=>n.classList.remove('active'));
+        link.classList.add('active');
+        // after short delay switch page
+        setTimeout(()=>{
+          pages.forEach(p=>p.classList.remove('active'));
+          const el = document.getElementById(target);
+          if(el) el.classList.add('active');
+          window.scrollTo(0,0);
+          revealFlops();
+          hideLoader();
+        },600);
+      });
+    });
+
+    // ---- Flop reveal on scroll ----
+    function isInViewport(el){
+      const rect = el.getBoundingClientRect();
+      return rect.top < (window.innerHeight || document.documentElement.clientHeight) - 60;
+    }
+    function revealFlops(){
+      document.querySelectorAll('.flop').forEach(el=>{
+        if(isInViewport(el)) el.classList.add('in-view');
+      });
+    }
+    window.addEventListener('scroll',revealFlops);
+    window.addEventListener('load',()=>{
+      // initial reveal
+      revealFlops();
+      startCounter();
+      populateReviews();
+    });
+
+    // ---- Client counter ----
+function startCounter(){
+  const el = document.getElementById('clientCounter');
+  const target = 14234;
+  let current = 0;
+  const duration = 1600;
+  const start = performance.now();
+
+  function step(now){
+    const prog = Math.min(1, (now - start) / duration);
+    current = Math.floor(prog * target);
+    el.textContent = current;
+    if(prog < 1) {
+      requestAnimationFrame(step);
+    } else {
+      el.textContent = target + "+";
+    }
+  }
+
+  requestAnimationFrame(step);
+
+    }
+
+    // ---- Sample reviews (restored) ----
+    const sampleReviews = [
+      {name:'Abnerzill Obare', text:'Excellent service and fast delivery. Parts were exactly what I ordered and fit perfectly.', likes:12},
+      {name:'Mercy Nyakweba.', text:'Friendly staff and great prices. Highly recommend SIRONS AUTO for spares.', likes:9},
+      {name:'Edward Soi.', text:'They sourced a hard-to-find part and delivered within 48 hours.', likes:11},
+      {name:'Aisha K.', text:'Professional advice saved me money on unnecessary replacements.', likes:8},
+      {name:'Benson P.', text:'Good quality re-meshed tyres and quick fitting.', likes:7},
+      {name:'Carol N.', text:'Trustworthy shop with knowledgeable staff.', likes:10},
+      {name:'Peter L.', text:'Great after-sale support and follow up.', likes:6},
+      {name:'Wanjiru S.', text:'Fair prices and honest assessments.', likes:13},
+      {name:'Sam O.', text:'Well organized store layout and quick service.', likes:5},
+      {name:'Lilian M.', text:'My go-to place for spares in Nairobi!', likes:14}
+    ];
+
+    function populateReviews(){
+      const container = document.getElementById('reviews');
+      if(!container) return;
+      container.innerHTML = '';
+      sampleReviews.forEach(r=>{
+        const div = document.createElement('div');
+        div.className = 'review';
+        div.innerHTML = `<div class="meta">${r.name}<span class="likes">♥ ${r.likes}</span></div><div class="body">${r.text}</div>`;
+        container.appendChild(div);
+      });
+    }
+
+    // ---- Feedback form (visual only) ----
+    document.getElementById('feedbackForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('fbName').value || 'Anonymous';
+      const email = document.getElementById('fbEmail').value || '';
+      const msg = document.getElementById('fbMessage').value || '';
+      // prepend to reviews as a new review (visual)
+      sampleReviews.unshift({name: name, text: msg, likes: Math.floor(Math.random()*20)+1});
+      populateReviews();
+      this.reset();
+      // visual success
+      alert('Thank you — your feedback has been received. We will review it shortly.');
+    });
+
+    // ---- Contact "Message Us" form (visual only) ----
+    document.getElementById('contactForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('msgName').value;
+      const email = document.getElementById('msgEmail').value;
+      const body = document.getElementById('msgBody').value;
+      // show visual confirmation
+      alert('Message sent! We will contact you on ' + (email || 'your email') + ' soon. Thank you, ' + (name || 'friend') + '.');
+      this.reset();
+    });
+
+    // make images have hover class for keyboard users
+    document.querySelectorAll('img').forEach(img=>{
+      img.addEventListener('mouseover', ()=> img.classList.add('hovered'));
+      img.addEventListener('mouseout', ()=> img.classList.remove('hovered'));
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
